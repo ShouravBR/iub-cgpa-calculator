@@ -1,0 +1,278 @@
+<!DOCTYPE>
+<html>
+
+<head>
+	<title>IUB CGPA Calculator</title>
+	<meta charset='utf-8'>
+	<meta name=viewport content='width=device-width, initial-scale=1'>
+	<link rel='stylesheet' href='normalize.css'>
+	<link rel='stylesheet' href='style.css'>
+	<style>
+		#result input{
+				color: black;
+			}
+			.row{
+				display: table-row;
+			}
+			.row > * {
+				margin: 5px;
+				display: table-cell;
+			}
+			.course,.credit,.grade{
+				min-width: 60px;
+			}
+			.course,.grade{
+				text-transform: uppercase;
+			}
+			th:first-child{
+				width: 20px;
+			}
+		</style>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-40269231-7"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-40269231-7');
+	</script>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script>
+	  (adsbygoogle = window.adsbygoogle || []).push({
+		google_ad_client: "ca-pub-9451347355806516",
+		enable_page_level_ads: true
+	  });
+	</script>
+</head>
+
+<body>
+	<h2>IUB CGPA Calculator</h2>
+	<div class='container' style="max-width:400px">
+		<div class="fb-like" data-href="http://shouravbr.github.io/iub/cgpa/" data-layout="standard" data-action="like"
+		 data-show-faces="false" data-share="true"></div>
+		<div id='result'>
+			<div class='row'>
+				<label>CGPA</label>
+				<input id='cgpa' type='text' disabled='disabled'>
+			</div>
+			<div class='row'>
+				<label>Credits Earned</label>
+				<input id='creditsEarned' type='text' disabled='disabled'>
+			</div>
+			<div class='row'>
+				<label>Scholarship
+					<a href="http://www.iub.edu.bd/admissions/aid" target="_blank">(?)</a>
+				</label>
+				<input id='merit' type='text' disabled='disabled'>
+			</div>
+		</div>
+		<table id='details'>
+			<tbody>
+				<tr>
+					<th>#</th>
+					<th>Course</th>
+					<th>Grade</th>
+					<th>Credit</th>
+				</tr>
+				<tr>
+					<td> </td>
+					<td>Transcript</td>
+					<td><input id="transcript-cgpa" style="max-width:60px" type='text' placeholder="cgpa" maxlength="4" value="0.00"></td>
+					<td><input id="transcript-credits" type='number' min="0" max="150" value="0"></td>
+				</tr>
+
+				<tr id='buttons'>
+					<td colspan="4" style='text-align: right;'>
+						<Button onclick="reset();">Reset</Button>
+						<Button onclick="add5();">Add 5 rows</Button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>CGPA calculated may vary from the official transcript. Use at your own risk.</p>
+	</div>
+	<!--<div id="disqus_thread" class="container" style="max-width:400px"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+var disqus_config = function () {
+this.page.url = "http://shouravbr.github.io/iub/cgpa/";  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = "shouravbr-iub-cgpa"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://http-shouravbr-github-io.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>-->
+	<script>
+		var i = 5;
+		function getMerit(cgpa) {
+			if (cgpa >= 3.85) return 1;
+			else if (cgpa >= 3.80) return .75;
+			else if (cgpa >= 3.70) return .5;
+			else if (cgpa >= 3.51) return .3;
+			else if (cgpa >= 3.26) return .2;
+			else return 0;
+			return 0;
+		}
+		function getGpa(grade) {
+			var gpa = {
+				"A": 4.0,
+				"A-": 3.7,
+				"B+": 3.3,
+				"B": 3.0,
+				"B-": 2.7,
+				"C+": 2.3,
+				"C": 2.0,
+				"C-": 1.7,
+				"D+": 1.3,
+				"D": 1.0,
+				"F": 0.0,
+				"Z": 0.0,
+			};
+			return gpa[grade];
+		}
+		function updateResult() {
+			var credits = document.getElementsByClassName('credit');
+			var grades = document.getElementsByClassName('grade');
+
+			var transcriptCgpa = document.getElementById('transcript-cgpa').value * 1;
+			var totalCredits = document.getElementById('transcript-credits').value * 1;
+			var totalGpaCreditProduct = transcriptCgpa * totalCredits;
+
+			var limit = credits.length;
+			for (var i = 0; i < limit; i++) {
+				var credit = credits[i].value * 1;
+				var gpa = grades[i].value * 1;
+				totalCredits += credit;
+				totalGpaCreditProduct += gpa * credit;
+				////console.log(i+": "+grades[i].value);
+				////console.log(i+": "+totalGpaCreditProduct);
+			}
+
+			var cgpa = Math.round(totalGpaCreditProduct / totalCredits * 100) / 100;
+			document.getElementById('cgpa').value = cgpa;
+			document.getElementById('creditsEarned').value = totalCredits;
+			document.getElementById('merit').value = (getMerit(cgpa) * 100) + "%";
+			save();
+		}
+
+		function hookOnchange() {
+			var e = document.getElementById("details").getElementsByTagName('input');
+			var limit = e.length;
+			for (var i = 0; i < limit; i++) {
+				e[i].onchange = updateResult;
+				e[i].onclick = function () { this.select() };
+			}
+			var e = document.getElementById("details").getElementsByTagName('select');
+			var limit = e.length;
+			for (var i = 0; i < limit; i++) {
+				e[i].onchange = updateResult;
+			}
+		}
+
+		function add() {
+			var e = document.createElement('tr');
+			e.setAttribute('class', 'detail-row');
+			e.innerHTML = "<td>" + (++i) + "</td> \
+					<td><input class='course' type='text' maxlength='7' placeholder='(optional)'></td> \
+					<td><select class='grade'> \
+							<option value='4.0' selected='selected'>A</option> \
+							<option value='3.7'>A-</option> \
+							<option value='3.3'>B+</option> \
+							<option value='3.0'>B</option> \
+							<option value='2.7'>B-</option> \
+							<option value='2.3'>C+</option> \
+							<option value='2.0'>C</option> \
+							<option value='1.7'>C-</option> \
+							<option value='1.3'>D+</option> \
+							<option value='1.0'>D</option> \
+							<option value='0.0'>F</option> \
+						</select> \
+					</td> \
+					<td><input class='credit' type='number' maxlength='1' placeholder='(0-4)' value='0' min='0' max='9'></td>";
+			var b = document.getElementById('buttons');
+			b.parentElement.insertBefore(e, b);
+			return e;
+		}
+		function add5() {
+			add();
+			add();
+			add();
+			add();
+			add();
+			updateResult();
+			hookOnchange();
+		}
+		function removeAll() {
+			var rows = document.getElementsByClassName('detail-row');
+			while (rows.length > 0) {
+				rows[0].remove();
+			}
+			i = 0;
+		}
+		function reset() {
+			removeAll();
+			add5();
+			hookOnchange();
+			updateResult();
+		}
+
+		function save() {
+			var courses = document.getElementsByClassName('course');
+			var credits = document.getElementsByClassName('credit');
+			var grades = document.getElementsByClassName('grade');
+
+			var data = [];
+
+			var limit = credits.length;
+			for (var i = 0; i < limit; i++) {
+				data.push([courses[i].value, grades[i].selectedIndex, credits[i].value]);
+			}
+			localStorage.setItem('data', JSON.stringify(data));
+
+			var transcript = [document.getElementById('transcript-cgpa').value * 1,
+			document.getElementById('transcript-credits').value * 1];
+			localStorage.setItem('transcript', JSON.stringify(transcript));
+		}
+		function load() {
+			var data = localStorage.getItem('data');
+			var transcript = localStorage.getItem('transcript');
+			if (transcript != null) {
+				transcript = JSON.parse(transcript);
+				document.getElementById('transcript-cgpa').value = transcript[0];
+				document.getElementById('transcript-credits').value = transcript[1];
+			}
+			if (data != null) {
+				data = JSON.parse(data);
+				removeAll();
+				for (var i = 0; i < data.length; i++) {
+					var e = add();
+					//console.log(e.children[2].firstChild);
+					//console.log(data[i]);
+					e.children[1].firstChild.value = data[i][0];
+					e.children[2].firstChild.selectedIndex = data[i][1];
+					e.children[3].firstChild.value = data[i][2];
+				}
+			} else {
+				add5();
+			}
+		}
+
+		window.onload = function () {
+			load();
+			hookOnchange();
+			updateResult();
+		};
+	</script>
+</body>
+
+</html>

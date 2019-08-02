@@ -1,0 +1,41 @@
+body{
+	margin: 0;
+}
+.container{
+	max-width: 760px;
+	margin: 0 auto;
+	position: relative;
+}
+h2{
+	font-family: consolas;
+	color: white;
+	text-align: center;
+	background-color: #2980b9;
+	margin-top: 0;
+	margin-bottom: 5px;
+}
+table{
+	width: 100%;
+	color: #111;
+}
+th{
+	background-color: #dde;
+	padding: 5px;
+}
+th:first-child{
+	width: 100px;
+}
+td{
+  	text-align: center;
+  	padding: 5px;
+}
+tr:nth-child(2n+1){
+		background-color: #F7F7F7;
+}
+tr:nth-child(2n+2){
+	background-color: #F0F0F0;
+}
+input{
+	margin: 5px 0;
+	width: 100%;
+}
